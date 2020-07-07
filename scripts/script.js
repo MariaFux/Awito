@@ -5,6 +5,9 @@ const modalAdd = document.querySelector('.modal__add'),
   modalBtnSubmit = document.querySelector('.modal__btn-submit'),
   modalSubmit = document.querySelector('.modal__submit');
 
+const modalItem = document.querySelector('.modal__item'),
+  modalCards = document.querySelectorAll('.card');
+
 addAd.addEventListener('click', () => {
   modalAdd.classList.remove('hide');
   modalBtnSubmit.disabled = true;
@@ -24,4 +27,14 @@ document.addEventListener('keydown', (event) => {
     modalAdd.classList.add('hide');
     modalSubmit.reset();
   }
+});
+
+[].forEach.call(modalCards, (card) => {
+  card.addEventListener('click', (event) => {
+    const target = event.target;
+    
+    if(card.closest('.catalog')) {
+      modalItem.classList.remove('hide');
+    }
+  });
 });
