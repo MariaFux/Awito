@@ -17,3 +17,10 @@ modalAdd.addEventListener('click', (event) => {
     modalSubmit.reset();
   }
 })
+
+document.addEventListener('keydown', (event) => {
+  if(event.keyCode === 27){
+    modalAdd.classList.add('hide');
+    modalSubmit.reset();
+  }
+});
