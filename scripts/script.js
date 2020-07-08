@@ -46,3 +46,9 @@ modalItem.addEventListener('click', (event) => {
     modalItem.classList.add('hide');
   }
 })
+
+document.addEventListener('keydown', (event) => {
+  if(event.keyCode === 27){
+    modalItem.classList.add('hide');
+  }
+});
