@@ -3,9 +3,10 @@
 const modalAdd = document.querySelector('.modal__add'),
   addAd = document.querySelector('.add__ad'),
   modalBtnSubmit = document.querySelector('.modal__btn-submit'),
-  modalSubmit = document.querySelector('.modal__submit');
-
-const modalItem = document.querySelector('.modal__item'),
+  modalSubmit = document.querySelector('.modal__submit'),
+  modalBtnWarning = document.querySelector('.modal__btn-warning'),
+  catalog = document.querySelector('.catalog'),
+  modalItem = document.querySelector('.modal__item'),
   modalCards = document.querySelectorAll('.card');
 
 addAd.addEventListener('click', () => {
