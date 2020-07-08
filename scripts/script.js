@@ -1,5 +1,7 @@
 'use strict';
 
+const dataBase = [];
+
 const modalAdd = document.querySelector('.modal__add'),
   addAd = document.querySelector('.add__ad'),
   modalBtnSubmit = document.querySelector('.modal__btn-submit'),
@@ -42,6 +44,18 @@ modalSubmit.addEventListener('input', () => {
   modalBtnSubmit.disabled = !validForm;
   modalBtnWarning.style.display = validForm ? 'none' : '';
 });
+
+modalSubmit.addEventListener('submit', event => {
+  event.preventDefault(); //чтобы не перезагружалась страница
+  const itemObj = {};
+  //формируем объект (имя - значение)
+  for (const elem of elementsModalSubmit) {
+    itemObj[elem.name] = elem.value;
+  }
+  //добавляем полученные данные в массив
+  dataBase.push(itemObj);
+  modalSubmit.reset();
+})
 
 //открытие модального окна добавления объявления
 addAd.addEventListener('click', () => {
