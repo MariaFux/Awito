@@ -21,28 +21,31 @@ const closeModal = function(event) {
   }
 };
 
+//функция для закрытия модальных окон по Esc
+const closeModalEsc = (event) => {
+  if (event.code === 'Escape') {
+    modalAdd.classList.add('hide');
+    modalItem.classList.add('hide');
+    modalSubmit.reset();
+    document.removeEventListener('keydown', closeModalEsc);
+  }
+};
+
 //открытие модального окна добавления объявления
 addAd.addEventListener('click', () => {
   modalAdd.classList.remove('hide');
   modalBtnSubmit.disabled = true;
+  document.addEventListener('keydown', closeModalEsc);
 })
 
 //открытие модального окна отдельного товара
 catalog.addEventListener('click', (event) => {
   const target = event.target;
 
-  if (target.closest('.card')){
+  if (target.closest('.card')) {
     modalItem.classList.remove('hide');
+    document.addEventListener('keydown', closeModalEsc);
   } 
-});
-
-//закрытие модальных окон по Esc
-document.addEventListener('keydown', (event) => {
-  if(event.keyCode === 27){
-    modalAdd.classList.add('hide');
-    modalItem.classList.add('hide');
-    modalSubmit.reset();
-  }
 });
  
 modalAdd.addEventListener('click', closeModal);
