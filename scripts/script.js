@@ -38,3 +38,11 @@ document.addEventListener('keydown', (event) => {
     }
   });
 });
+
+modalItem.addEventListener('click', (event) => {
+  const target = event.target;
+
+  if(target.classList.contains('modal__close') || target === modalItem){
+    modalItem.classList.add('hide');
+  }
+})
