@@ -8,46 +8,38 @@ const modalAdd = document.querySelector('.modal__add'),
   modalSubmit = document.querySelector('.modal__submit'),
   modalBtnWarning = document.querySelector('.modal__btn-warning'),
   catalog = document.querySelector('.catalog'),
-  modalItem = document.querySelector('.modal__item'),
-  modalCards = document.querySelectorAll('.card');
+  modalItem = document.querySelector('.modal__item');
 
 //все элементы модального окна кроме кнопки "Отправить"
 const elementsModalSubmit = [...modalSubmit.elements]
   .filter(elem => elem.tagName !== 'BUTTON');
+
+//перебор и проверка полей на пустоту
+const checkForm = () => {
+  //становится true, когда все поля модального окна не пустые
+  const validForm = elementsModalSubmit.every(elem => elem.value);
+  modalBtnSubmit.disabled = !validForm;
+  modalBtnWarning.style.display = validForm ? 'none' : '';
+};
 
 //функция для закрытия модальных окон 
 //по крестику, свободному пространству, Esc и кнопке "Отправить"
 const closeModal = function(event) {
   const target = event.target;
 
-  if (target.closest('.modal__close') || target === this || event.code === 'Escape' || target === modalSubmit) {
+  if (target.closest('.modal__close') || target.classList.contains('modal') || event.code === 'Escape') {
     modalAdd.classList.add('hide');
     modalItem.classList.add('hide');
-
-    if (event.code === 'Escape') {
-      document.removeEventListener('keydown', closeModal);
-    }
-
-    if (this === modalAdd || event.code === 'Escape') {
-      modalSubmit.reset();
-    }
-
-    if (target === modalSubmit){
-      modalBtnSubmit.disabled = true;
-      modalBtnWarning.style.display = '';
-    }        
+    document.removeEventListener('keydown', closeModal);
+    modalSubmit.reset();
+    checkForm();
   }
 };
 
 //активируется кнопка "Отправить", когда все поля модального окна не пустые
-modalSubmit.addEventListener('input', () => {
-  //становится true, когда все поля модального окна не пустые
-  const validForm = elementsModalSubmit.every(elem => elem.value);
-  modalBtnSubmit.disabled = !validForm;
-  modalBtnWarning.style.display = validForm ? 'none' : '';
-});
+modalSubmit.addEventListener('input', checkForm);
 
-modalSubmit.addEventListener('submit', event => {
+modalSubmit.addEventListener('submit', (event) => {
   event.preventDefault(); //чтобы не перезагружалась страница
   const itemObj = {};
 
@@ -58,9 +50,8 @@ modalSubmit.addEventListener('submit', event => {
 
   //добавляем полученные данные в массив
   dataBase.push(itemObj);
-  closeModal(event); //закрытие окна по кнопке
-  modalSubmit.reset();
-})
+  closeModal({target: modalAdd});
+});
 
 //открытие модального окна добавления объявления
 addAd.addEventListener('click', () => {
