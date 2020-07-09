@@ -8,13 +8,21 @@ const modalAdd = document.querySelector('.modal__add'),
   modalSubmit = document.querySelector('.modal__submit'),
   modalBtnWarning = document.querySelector('.modal__btn-warning'),
   catalog = document.querySelector('.catalog'),
-  modalItem = document.querySelector('.modal__item');
+  modalItem = document.querySelector('.modal__item'),
+  modalFileInput = document.querySelector('.modal__file-input'),
+  modalFileBtn = document.querySelector('.modal__file-btn'),
+  modalImageAdd = document.querySelector('.modal__image-add');
+
+const textFileBtn = modalFileBtn.textContent;
+const srcModalImage = modalImageAdd.src;
 
 //все элементы модального окна кроме кнопки "Отправить"
 const elementsModalSubmit = [...modalSubmit.elements]
   .filter(elem => elem.tagName !== 'BUTTON');
 
-//сохранение данных в локальное хранилище
+  const infoPhoto = {};
+
+  //сохранение данных в локальное хранилище
 const saveDb = () => localStorage.setItem('awito', JSON.stringify(dataBase));
 
 //перебор и проверка полей на пустоту
@@ -35,9 +43,37 @@ const closeModal = function(event) {
     modalItem.classList.add('hide');
     document.removeEventListener('keydown', closeModal);
     modalSubmit.reset();
+    modalImageAdd.src = srcModalImage;
+    modalFileBtn.textContent = textFileBtn;
     checkForm();
   }
 };
+
+//изменение фотографии в модальном окне modalAdd
+modalFileInput.addEventListener('change', (event) => {
+  const target = event.target;
+
+  const reader = new FileReader();
+
+  const file = target.files[0];
+
+  infoPhoto.filename = file.name;
+  infoPhoto.size = file.size;
+
+  reader.readAsBinaryString(file);
+
+  reader.addEventListener('load', (event) => {
+    if (infoPhoto.size < 200000){
+      modalFileBtn.textContent = infoPhoto.filename;
+      infoPhoto.base64 = btoa(event.target.result);
+      modalImageAdd.src = `data:imge/jpeg;base64,${infoPhoto.base64}`;
+    } else {
+      modalFileBtn.textContent = 'Файл больше 200кб!';
+      modalFileInput.value = '';
+      checkForm();
+    }    
+  });
+});
 
 //активируется кнопка "Отправить", когда все поля модального окна не пустые
 modalSubmit.addEventListener('input', checkForm);
