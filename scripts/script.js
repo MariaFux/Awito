@@ -20,9 +20,9 @@ const srcModalImage = modalImageAdd.src;
 const elementsModalSubmit = [...modalSubmit.elements]
   .filter(elem => elem.tagName !== 'BUTTON');
 
-  const infoPhoto = {};
+const infoPhoto = {};
 
-  //сохранение данных в локальное хранилище
+//сохранение данных в локальное хранилище
 const saveDb = () => localStorage.setItem('awito', JSON.stringify(dataBase));
 
 //перебор и проверка полей на пустоту
@@ -49,12 +49,27 @@ const closeModal = function(event) {
   }
 };
 
+//функция вставки новой карточки
+const renderCard = () => {
+  catalog.textContent = '';
+
+  dataBase.forEach((item, i) => {
+    catalog.insertAdjacentHTML('beforeend', `
+    <li class="card" data-id="${i}">
+      <img class="card__image" src="data:imge/jpeg;base64,${item.image}" alt="test">
+      <div class="card__description">
+        <h3 class="card__header">${item.nameItem}</h3>
+        <div class="card__price">${item.costItem} ₽</div>
+      </div>
+    </li>
+    `)
+  });
+};
+
 //изменение фотографии в модальном окне modalAdd
 modalFileInput.addEventListener('change', (event) => {
   const target = event.target;
-
   const reader = new FileReader();
-
   const file = target.files[0];
 
   infoPhoto.filename = file.name;
@@ -87,10 +102,11 @@ modalSubmit.addEventListener('submit', (event) => {
     itemObj[elem.name] = elem.value;
   }
 
-  //добавляем полученные данные в массив
-  dataBase.push(itemObj);
+  itemObj.image = infoPhoto.base64;
+  dataBase.push(itemObj); //добавляем полученные данные в массив
   closeModal({target: modalAdd});
   saveDb();
+  renderCard();
 });
 
 //открытие модального окна добавления объявления
@@ -112,3 +128,5 @@ catalog.addEventListener('click', (event) => {
  
 modalAdd.addEventListener('click', closeModal);
 modalItem.addEventListener('click', closeModal);
+
+renderCard();
