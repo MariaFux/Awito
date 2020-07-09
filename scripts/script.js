@@ -1,6 +1,6 @@
 'use strict';
 
-const dataBase = [];
+const dataBase = JSON.parse(localStorage.getItem('awito')) || [];
 
 const modalAdd = document.querySelector('.modal__add'),
   addAd = document.querySelector('.add__ad'),
@@ -13,6 +13,9 @@ const modalAdd = document.querySelector('.modal__add'),
 //все элементы модального окна кроме кнопки "Отправить"
 const elementsModalSubmit = [...modalSubmit.elements]
   .filter(elem => elem.tagName !== 'BUTTON');
+
+//сохранение данных в локальное хранилище
+const saveDb = () => localStorage.setItem('awito', JSON.stringify(dataBase));
 
 //перебор и проверка полей на пустоту
 const checkForm = () => {
@@ -51,6 +54,7 @@ modalSubmit.addEventListener('submit', (event) => {
   //добавляем полученные данные в массив
   dataBase.push(itemObj);
   closeModal({target: modalAdd});
+  saveDb();
 });
 
 //открытие модального окна добавления объявления
