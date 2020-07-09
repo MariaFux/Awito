@@ -15,25 +15,27 @@ const modalAdd = document.querySelector('.modal__add'),
 const elementsModalSubmit = [...modalSubmit.elements]
   .filter(elem => elem.tagName !== 'BUTTON');
 
-//функция для закрытия модальных окон по крестику и свободному пространству
+//функция для закрытия модальных окон 
+//по крестику, свободному пространству, Esc и кнопке "Отправить"
 const closeModal = function(event) {
   const target = event.target;
 
-  if (target.closest('.modal__close') || target === this) {
-    this.classList.add('hide');
-    if (this === modalAdd) {
-      modalSubmit.reset();
-    }
-  }
-};
-
-//функция для закрытия модальных окон по Esc
-const closeModalEsc = (event) => {
-  if (event.code === 'Escape') {
+  if (target.closest('.modal__close') || target === this || event.code === 'Escape' || target === modalSubmit) {
     modalAdd.classList.add('hide');
     modalItem.classList.add('hide');
-    modalSubmit.reset();
-    document.removeEventListener('keydown', closeModalEsc);
+
+    if (event.code === 'Escape') {
+      document.removeEventListener('keydown', closeModal);
+    }
+
+    if (this === modalAdd || event.code === 'Escape') {
+      modalSubmit.reset();
+    }
+
+    if (target === modalSubmit){
+      modalBtnSubmit.disabled = true;
+      modalBtnWarning.style.display = '';
+    }        
   }
 };
 
@@ -48,12 +50,15 @@ modalSubmit.addEventListener('input', () => {
 modalSubmit.addEventListener('submit', event => {
   event.preventDefault(); //чтобы не перезагружалась страница
   const itemObj = {};
+
   //формируем объект (имя - значение)
   for (const elem of elementsModalSubmit) {
     itemObj[elem.name] = elem.value;
   }
+
   //добавляем полученные данные в массив
   dataBase.push(itemObj);
+  closeModal(event); //закрытие окна по кнопке
   modalSubmit.reset();
 })
 
@@ -61,7 +66,7 @@ modalSubmit.addEventListener('submit', event => {
 addAd.addEventListener('click', () => {
   modalAdd.classList.remove('hide');
   modalBtnSubmit.disabled = true;
-  document.addEventListener('keydown', closeModalEsc);
+  document.addEventListener('keydown', closeModal);
 });
 
 //открытие модального окна отдельного товара
@@ -70,7 +75,7 @@ catalog.addEventListener('click', (event) => {
 
   if (target.closest('.card')) {
     modalItem.classList.remove('hide');
-    document.addEventListener('keydown', closeModalEsc);
+    document.addEventListener('keydown', closeModal);
   } 
 });
  
