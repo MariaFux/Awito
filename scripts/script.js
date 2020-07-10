@@ -2,6 +2,8 @@
 
 const dataBase = JSON.parse(localStorage.getItem('awito')) || [];
 
+let counter = dataBase.length;
+
 const modalAdd = document.querySelector('.modal__add'),
   addAd = document.querySelector('.add__ad'),
   modalBtnSubmit = document.querySelector('.modal__btn-submit'),
@@ -61,9 +63,9 @@ const closeModal = function(event) {
 const renderCard = (Db = dataBase) => {
   catalog.textContent = '';
 
-  Db.forEach((item, i) => {
+  Db.forEach((item) => {
     catalog.insertAdjacentHTML('beforeend', `
-    <li class="card" data-id="${i}">
+    <li class="card" data-id="${item.id}">
       <img class="card__image" src="data:imge/jpeg;base64,${item.image}" alt="test">
       <div class="card__description">
         <h3 class="card__header">${item.nameItem}</h3>
@@ -115,13 +117,14 @@ modalSubmit.addEventListener('input', checkForm);
 
 modalSubmit.addEventListener('submit', (event) => {
   event.preventDefault(); //чтобы не перезагружалась страница
-  const itemObj = {};
+  const itemObj = {};  
 
   //формируем объект (имя - значение)
   for (const elem of elementsModalSubmit) {
-    itemObj[elem.name] = elem.value;
+    itemObj[elem.name] = elem.value;    
   }
 
+  itemObj.id = counter++;
   itemObj.image = infoPhoto.base64;
   dataBase.push(itemObj); //добавляем полученные данные в массив
   closeModal({target: modalAdd});
@@ -142,7 +145,7 @@ catalog.addEventListener('click', (event) => {
   const card = target.closest('.card');
 
   if (card) {
-    const item = dataBase[card.dataset.id];
+    const item = dataBase.find(item => item.id === +card.dataset.id);
 
     //соответствующие данные для карточки
     modalImageItem.src = `data:imge/jpeg;base64,${item.image}`;
