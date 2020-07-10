@@ -19,6 +19,8 @@ const modalImageItem = document.querySelector('.modal__image-item'),
   modalDescriptionItem = document.querySelector('.modal__description-item'),
   modalCostItem = document.querySelector('.modal__cost-item');
 
+const searchInput = document.querySelector('.search__input');
+
 const textFileBtn = modalFileBtn.textContent;
 const srcModalImage = modalImageAdd.src;
 
@@ -56,10 +58,10 @@ const closeModal = function(event) {
 };
 
 //функция вставки новой карточки
-const renderCard = () => {
+const renderCard = (Db = dataBase) => {
   catalog.textContent = '';
 
-  dataBase.forEach((item, i) => {
+  Db.forEach((item, i) => {
     catalog.insertAdjacentHTML('beforeend', `
     <li class="card" data-id="${i}">
       <img class="card__image" src="data:imge/jpeg;base64,${item.image}" alt="test">
@@ -71,6 +73,18 @@ const renderCard = () => {
     `)
   });
 };
+
+//событие для строки поиска
+searchInput.addEventListener('input', () => {
+  const valueSearch = searchInput.value.trim().toLowerCase();
+  
+  //поиск не начнется пока меньше 3 символов
+  if (valueSearch.length > 2) {
+    const result = dataBase.filter(item => item.nameItem.toLowerCase().includes(valueSearch) ||
+      item.descriptionItem.toLowerCase().includes(valueSearch));
+    renderCard(result);
+  }
+});
 
 //изменение фотографии в модальном окне modalAdd
 modalFileInput.addEventListener('change', (event) => {
@@ -129,6 +143,8 @@ catalog.addEventListener('click', (event) => {
 
   if (card) {
     const item = dataBase[card.dataset.id];
+
+    //соответствующие данные для карточки
     modalImageItem.src = `data:imge/jpeg;base64,${item.image}`;
     modalHeaderItem.textContent = item.nameItem;
     modalStatusItem.textContent = item.status;
