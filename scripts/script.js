@@ -73,7 +73,7 @@ const renderCard = (Db = dataBase) => {
         <div class="card__price">${item.costItem} ₽</div>
       </div>
     </li>
-    `)
+    `);
   });
 };
 
@@ -101,7 +101,7 @@ modalFileInput.addEventListener('change', (event) => {
   reader.readAsBinaryString(file);
 
   reader.addEventListener('load', (event) => {
-    if (infoPhoto.size < 200000){
+    if (infoPhoto.size < 200000) {
       modalFileBtn.textContent = infoPhoto.filename;
       infoPhoto.base64 = btoa(event.target.result);
       modalImageAdd.src = `data:imge/jpeg;base64,${infoPhoto.base64}`;
