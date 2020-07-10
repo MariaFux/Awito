@@ -13,6 +13,12 @@ const modalAdd = document.querySelector('.modal__add'),
   modalFileBtn = document.querySelector('.modal__file-btn'),
   modalImageAdd = document.querySelector('.modal__image-add');
 
+const modalImageItem = document.querySelector('.modal__image-item'),
+  modalHeaderItem = document.querySelector('.modal__header-item'),
+  modalStatusItem = document.querySelector('.modal__status-item'),
+  modalDescriptionItem = document.querySelector('.modal__description-item'),
+  modalCostItem = document.querySelector('.modal__cost-item');
+
 const textFileBtn = modalFileBtn.textContent;
 const srcModalImage = modalImageAdd.src;
 
@@ -119,8 +125,16 @@ addAd.addEventListener('click', () => {
 //открытие модального окна отдельного товара
 catalog.addEventListener('click', (event) => {
   const target = event.target;
+  const card = target.closest('.card');
 
-  if (target.closest('.card')) {
+  if (card) {
+    const item = dataBase[card.dataset.id];
+    modalImageItem.src = `data:imge/jpeg;base64,${item.image}`;
+    modalHeaderItem.textContent = item.nameItem;
+    modalStatusItem.textContent = item.status;
+    modalDescriptionItem.textContent = item.descriptionItem;
+    modalCostItem.textContent = item.costItem;
+
     modalItem.classList.remove('hide');
     document.addEventListener('keydown', closeModal);
   } 
